@@ -1,0 +1,12 @@
+{
+  "name": "@plantbase/cli",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/main.ts",
+  "dependencies": {
+    "@plantbase/core": "workspace:*",
+    "@plantbase/db": "workspace:*",
+    "commander": "^15.0.0"
+  }
+}

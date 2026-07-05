@@ -1,0 +1,25 @@
+{
+  "name": "core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/core/src",
+  "projectType": "library",
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p packages/core/tsconfig.json --noEmit" }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p packages/core/tsconfig.json" },
+      "outputs": ["{workspaceRoot}/packages/core/dist"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": { "command": "vitest run --project core" }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": { "command": "eslint packages/core" }
+    }
+  }
+}

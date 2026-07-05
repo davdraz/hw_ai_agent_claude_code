@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+out/
+tmp/
+.nx/cache/
+.nx/workspace-data/
+
+# env
+.env
+.env.local
+
+# logs
+logs/
+*.log
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# os
+Thumbs.db
+.DS_Store
+
+# prisma
+packages/db/generated/

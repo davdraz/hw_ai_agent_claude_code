@@ -1,0 +1,25 @@
+{
+  "name": "db",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/db/src",
+  "projectType": "library",
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p packages/db/tsconfig.json --noEmit" }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p packages/db/tsconfig.json" },
+      "outputs": ["{workspaceRoot}/packages/db/dist"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": { "command": "vitest run --project db" }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": { "command": "eslint packages/db" }
+    }
+  }
+}

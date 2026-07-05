@@ -1,0 +1,35 @@
+{
+  "name": "plantbase",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Plantbase - CLI AI agent a novenykatalogus felett (NL -> SQL -> NL valasz).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.10.0",
+  "scripts": {
+    "plantbase": "tsx apps/cli/src/main.ts",
+    "build": "nx run-many -t build",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "typecheck": "nx run-many -t typecheck",
+    "format": "prettier --write .",
+    "prisma": "prisma",
+    "migrate": "prisma migrate dev",
+    "seed": "tsx packages/db/prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.6.0",
+    "nx": "^23.0.1",
+    "prettier": "^3.9.4",
+    "prisma": "6.19.3",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
+  }
+}
