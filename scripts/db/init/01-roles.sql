@@ -1,7 +1,8 @@
 -- Csak egyszer fut le, a Postgres konténer első indításakor (üres data volume mellett).
 -- Két szerepkör: az app (read-write, Prisma migrate/seed) és a readonly (az agent runSql toolja).
 
-CREATE ROLE plantbase_app WITH LOGIN PASSWORD 'plantbase_app';
+-- CREATEDB kell a Prisma Migrate "shadow database"-jéhez migráció közben.
+CREATE ROLE plantbase_app WITH LOGIN CREATEDB PASSWORD 'plantbase_app';
 GRANT ALL PRIVILEGES ON DATABASE plantbase TO plantbase_app;
 GRANT ALL ON SCHEMA public TO plantbase_app;
 
