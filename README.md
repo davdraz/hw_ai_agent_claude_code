@@ -36,7 +36,7 @@ scripts/db/init roles.sql - a két Postgres szerepkör (app / readonly) létreho
 ```powershell
 pnpm typecheck   # tsc --noEmit minden csomagra (Nx)
 pnpm lint        # ESLint minden csomagra (Nx)
-pnpm test        # Vitest (packages/core: run_sql guard, system prompt)
+pnpm test        # Vitest (packages/core: run_sql guard, list_categories, system prompt, askAgent multistep loop)
 pnpm build       # tsc build minden csomagra (Nx)
 pnpm format      # Prettier
 
