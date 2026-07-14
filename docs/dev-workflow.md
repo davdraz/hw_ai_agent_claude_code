@@ -145,6 +145,9 @@ A projekt-szintű `.mcp.json` a Claude Code (L1) fejlesztői eszközhöz köt MC
 | Szerver | Cél | Előfeltétel |
 |---|---|---|
 | `context7` | Friss, verzió-specifikus library-dokumentáció (pl. Prisma) lekérdezése kódolás előtt - ezt az `architektura.md` 7. pontja ("Library-doksi munka előtt") már eddig is elvárta, csak eddig nem volt beállítva. | Nincs (npx-en fut); API kulcs nélkül alap rate limittel működik. |
+| `postgres` | A lokális `products` séma és a szintetikus seed-adat közvetlen vizsgálata fejlesztés közben (pl. "milyen kategóriák vannak ténylegesen a DB-ben", migráció utáni ellenőrzés) - Claude Code (L1) oldalról, a termékkód `runSql` tooljától függetlenül. | `uv`/`uvx` telepítve (`pipx install uv` vagy lásd a `postgres-mcp` projekt doksiját); a `DATABASE_URL_READONLY` env változó beállítva (hiányában a lokális dev connection stringre esik vissza). |
+
+Fontos: a `postgres` szerver kizárólag a **read-only** kapcsolati stringet (`DATABASE_URL_READONLY`) és `--access-mode=restricted` módot használja - ugyanazt a réteges védelmi elvet követve, amit az `architektura.md` az agent `runSql` toolja kapcsán előír (prompt szabály + app-guard + DB-jogosultság + külön connection string). Az Anthropic hivatalos `@modelcontextprotocol/server-postgres` csomagja NEM lett használva: azt 2025 közepén archiválták, és a read-only védelme egy javítatlan SQL injection sebezhetőség miatt megkerülhető volt. Helyette az aktívan karbantartott `postgres-mcp` (crystaldba) csomag került beállításra, ami a védelmet adatbázis-motor / tranzakció szinten kényszeríti ki, nem szöveges szűréssel.
 
 ## Gyakori Windows parancsok
 
