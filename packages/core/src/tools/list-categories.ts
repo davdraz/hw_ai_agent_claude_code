@@ -1,5 +1,7 @@
 import { getReadonlyPool } from "./pool.js";
 
+// Szándékosan GROUP BY + COUNT, nem a HF-spec szó szerinti SELECT DISTINCT category:
+// ugyanazt a disztinkt listát adja, plusz kategóriánkénti darabszámmal (README "Saját tool" szakasz).
 export const LIST_CATEGORIES_SQL = `
   SELECT category, COUNT(*)::int AS count
   FROM products

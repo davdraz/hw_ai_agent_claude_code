@@ -46,6 +46,10 @@ pnpm seed                # ~30 szintetikus növény betöltése
 pnpm roi                # ROI kalkuláció (lásd docs/roi.md), --flaggel paraméterezhető
 ```
 
+## Saját tool: `list_categories`
+
+A HF-specifikáció szerinti `SELECT DISTINCT category` helyett a tool `SELECT category, COUNT(*) ... GROUP BY category`-t futtat: ugyanazt a disztinkt kategórialistát adja vissza, plusz kategóriánkénti darabszámmal, ami a "milyen kategóriák vannak" kérdésre a gyakorlatban hasznosabb választ tesz lehetővé (lásd [`list-categories.ts`](packages/core/src/tools/list-categories.ts)). Tudatos bővítés, nem eltérés a védelmi rétegekben: ugyanúgy csak a `DATABASE_URL_READONLY` kapcsolaton fut, és ugyanaz az `assertSelectOnly` guard fedi le (lásd [`list-categories.test.ts`](packages/core/tests/list-categories.test.ts)).
+
 ## Biztonság / átláthatóság
 
 - Az agent `runSql` toolja kizárólag a `DATABASE_URL_READONLY` kapcsolaton fut (Postgres `plantbase_readonly` szerepkör, csak SELECT jog), és alkalmazásoldali guard is csak SELECT-et enged át.
