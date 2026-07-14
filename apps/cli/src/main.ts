@@ -49,7 +49,20 @@ async function runInteractive(): Promise<void> {
 
   try {
     for (;;) {
-      const question = (await rl.question("> ")).trim();
+      let question: string;
+      try {
+        question = (await rl.question("> ")).trim();
+      } catch (error: unknown) {
+        // A bemeneti stream (stdin) váratlanul lezárult (pl. nem interaktív pipe EOF-ja);
+        // ez nem hiba, csendes kilépésnek tekintjük, "exit" begépeléséhez hasonlóan.
+        if (
+          error instanceof Error &&
+          (error as NodeJS.ErrnoException).code === "ERR_USE_AFTER_CLOSE"
+        ) {
+          break;
+        }
+        throw error;
+      }
 
       if (question.toLowerCase() === "exit") {
         break;
