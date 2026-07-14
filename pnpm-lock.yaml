@@ -47,9 +47,6 @@ importers:
       '@plantbase/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@plantbase/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       commander:
         specifier: ^15.0.0
         version: 15.0.0
