@@ -138,6 +138,14 @@ docs/
 
 A `/docs` frissítését a **`ddd-audit` skill** végzi (git-history -> docs), külön, igény szerint futtatva. NEM készítünk doc-freshness ellenőrző scriptet és Stop hookot az elején. A CI-alapú változat a 4. órán jön (always-on / CI/CD).
 
+## MCP szerverek (`.mcp.json`)
+
+A projekt-szintű `.mcp.json` a Claude Code (L1) fejlesztői eszközhöz köt MCP szervereket - ezek a plantbase agent (L2, termékkód) számára nem elérhetők és nem is szükségesek, kizárólag a fejlesztést segítik.
+
+| Szerver | Cél | Előfeltétel |
+|---|---|---|
+| `context7` | Friss, verzió-specifikus library-dokumentáció (pl. Prisma) lekérdezése kódolás előtt - ezt az `architektura.md` 7. pontja ("Library-doksi munka előtt") már eddig is elvárta, csak eddig nem volt beállítva. | Nincs (npx-en fut); API kulcs nélkül alap rate limittel működik. |
+
 ## Gyakori Windows parancsok
 
 ```powershell
