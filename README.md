@@ -52,6 +52,6 @@ pnpm roi                # ROI kalkuláció (lásd docs/roi.md), --flaggel param�
 - Minden interakció naplózva: `logs/<timestamp>.jsonl` (system prompt, üzenetek, generált SQL, eredmény, válasz, token-használat).
 - `--show-prompt` flaggel (`pnpm plantbase ask "..." --show-prompt`) a teljes üzenet-tömb kiírható.
 
-## Ismert korlát
+## Megjegyzés a Prisma klienshez
 
-Ez a scaffold Docker nélküli sandboxban készült: a Postgres-indítás, a `prisma migrate dev` és a `pnpm seed` éles futtatása Docker Desktoppal rendelkező gépen tesztelendő.
+A `pnpm install` egy `postinstall` hookon keresztül automatikusan lefuttatja a `prisma generate`-et, így a `packages/db/generated/client` a séma alapján azonnal, DB-kapcsolat nélkül is létrejön telepítés után. A `pnpm typecheck`/`pnpm build` ezért közvetlenül `pnpm install` után is működik; a tényleges adatbázis-kapcsolatot (migráció, seed, `ask`) továbbra is a "Gyors indulás" szakasz `docker compose up -d` + `pnpm prisma migrate dev` + `pnpm seed` lépései adják.
