@@ -43,6 +43,7 @@ pnpm format      # Prettier
 pnpm prisma <parancs>   # pl. pnpm prisma studio
 pnpm migrate            # prisma migrate dev
 pnpm seed                # ~30 szintetikus növény betöltése
+pnpm roi                # ROI kalkuláció (lásd docs/roi.md), --flaggel paraméterezhető
 ```
 
 ## Biztonság / átláthatóság

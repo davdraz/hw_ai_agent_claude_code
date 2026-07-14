@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "prisma": "prisma",
     "migrate": "prisma migrate dev",
-    "seed": "tsx packages/db/prisma/seed.ts"
+    "seed": "tsx packages/db/prisma/seed.ts",
+    "roi": "node scripts/roi.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
