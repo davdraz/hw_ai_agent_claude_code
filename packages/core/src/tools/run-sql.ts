@@ -1,7 +1,4 @@
-import pg from "pg";
-import { loadConfig } from "../config.js";
-
-const { Pool } = pg;
+import { getReadonlyPool } from "./pool.js";
 
 const FORBIDDEN_KEYWORDS = [
   "insert",
@@ -25,13 +22,6 @@ const FORBIDDEN_KEYWORDS = [
 ];
 
 export class UnsafeSqlError extends Error {}
-
-let pool: pg.Pool | undefined;
-
-function getPool(): pg.Pool {
-  pool ??= new Pool({ connectionString: loadConfig().DATABASE_URL_READONLY });
-  return pool;
-}
 
 export function assertSelectOnly(sql: string): void {
   const trimmed = sql.trim().replace(/;+\s*$/, "");
@@ -61,6 +51,6 @@ export interface RunSqlResult {
 
 export async function runSql(sql: string): Promise<RunSqlResult> {
   assertSelectOnly(sql);
-  const result = await getPool().query<Record<string, unknown>>(sql);
+  const result = await getReadonlyPool().query<Record<string, unknown>>(sql);
   return { rows: result.rows, rowCount: result.rowCount ?? result.rows.length };
 }

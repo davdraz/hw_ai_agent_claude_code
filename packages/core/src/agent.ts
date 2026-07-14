@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { loadConfig } from "./config.js";
 import { InteractionLogger } from "./logger.js";
 import { buildSystemPrompt } from "./system-prompt.js";
+import { listCategories } from "./tools/list-categories.js";
 import { runSql, UnsafeSqlError } from "./tools/run-sql.js";
 import type { AgentResult, ShowPromptMessage } from "./types.js";
 
@@ -18,6 +19,16 @@ const RUN_SQL_TOOL: Anthropic.Tool = {
       },
     },
     required: ["sql"],
+  },
+};
+
+const LIST_CATEGORIES_TOOL: Anthropic.Tool = {
+  name: "list_categories",
+  description:
+    "A products tábla összes létező kategóriájának (category oszlop) listája, kategóriánkénti darabszámmal. Akkor használd, ha a kérdés arra vonatkozik, milyen kategóriák léteznek, ne SQL-t írj hozzá.",
+  input_schema: {
+    type: "object",
+    properties: {},
   },
 };
 
@@ -52,7 +63,7 @@ export async function askAgent(
       model: config.ANTHROPIC_MODEL,
       max_tokens: 1024,
       system: systemPrompt,
-      tools: [RUN_SQL_TOOL],
+      tools: [RUN_SQL_TOOL, LIST_CATEGORIES_TOOL],
       messages,
     });
 
@@ -85,33 +96,57 @@ export async function askAgent(
     const toolResults: Anthropic.ToolResultBlockParam[] = [];
 
     for (const block of response.content) {
-      if (block.type !== "tool_use" || block.name !== "run_sql") {
+      if (block.type !== "tool_use") {
         continue;
       }
 
-      const input = block.input as { sql?: string };
-      const sql = input.sql ?? "";
-      logger.log({ type: "sql", sql });
+      if (block.name === "run_sql") {
+        const input = block.input as { sql?: string };
+        const sql = input.sql ?? "";
+        logger.log({ type: "sql", sql });
 
-      try {
-        const result = await runSql(sql);
-        executedSql.push(sql);
-        logger.log({ type: "sql_result", sql, rowCount: result.rowCount });
-        toolResults.push({
-          type: "tool_result",
-          tool_use_id: block.id,
-          content: JSON.stringify(result.rows),
-        });
-      } catch (error: unknown) {
-        const message =
-          error instanceof UnsafeSqlError ? error.message : "Hiba a lekérdezés futtatásakor.";
-        logger.log({ type: "error", sql, message });
-        toolResults.push({
-          type: "tool_result",
-          tool_use_id: block.id,
-          content: message,
-          is_error: true,
-        });
+        try {
+          const result = await runSql(sql);
+          executedSql.push(sql);
+          logger.log({ type: "sql_result", sql, rowCount: result.rowCount });
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: JSON.stringify(result.rows),
+          });
+        } catch (error: unknown) {
+          const message =
+            error instanceof UnsafeSqlError ? error.message : "Hiba a lekérdezés futtatásakor.";
+          logger.log({ type: "error", sql, message });
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: message,
+            is_error: true,
+          });
+        }
+        continue;
+      }
+
+      if (block.name === "list_categories") {
+        try {
+          const categories = await listCategories();
+          logger.log({ type: "sql_result", sql: "list_categories", rowCount: categories.length });
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: JSON.stringify(categories),
+          });
+        } catch {
+          const message = "Hiba a kategóriák lekérdezésekor.";
+          logger.log({ type: "error", sql: "list_categories", message });
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: block.id,
+            content: message,
+            is_error: true,
+          });
+        }
       }
     }
 
